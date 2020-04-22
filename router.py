@@ -7,6 +7,7 @@ import sys
 username_=sys.argv[1]
 password_=sys.argv[2]
 timetorun=int(sys.argv[3])
+period = int(sys.argv[4])
 
 def get_router_data(param):
     login_data = {
@@ -56,7 +57,7 @@ def get_router_data(param):
         final_list.append(tmp)
     return final_list
 
-period = 1
+
 
 def read_dhcp():
     soup = BeautifulSoup(open("dhcp_tab.html"),features="html5lib")
