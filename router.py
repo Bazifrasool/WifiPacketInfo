@@ -89,7 +89,7 @@ def processlist(prev_lst,current_lst):
         j=0
         while j < len(prev_lst[0]):
             if j == 1 or j==2 :
-                prev_lst[i][j] = (-int(prev_lst[i][j]) + int(current_lst[i][j]))   
+                prev_lst[i][j] = (-int(prev_lst[i][j]) + int(current_lst[i][j]))*1.2   
             j+=1    
         i+=1
         
@@ -133,5 +133,6 @@ else:
 
 
         for each in processed_list:
-            print(str(each[0])+"---Sending---"+ str(each[1])+"---Receiving---" + str(each[2]))
+            print(str(each[0])+"\nSending---"+ str(each[1])+"\nReceiving---" + str(each[2]))
+            print("\n\n")
         print("\n\n")
