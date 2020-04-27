@@ -1,2 +1,2 @@
 --syntax--
-router.py username password timestorun period
+python3 router.py username password timestorun period
