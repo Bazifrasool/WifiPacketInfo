@@ -3,6 +3,7 @@ import re
 import time
 from bs4 import BeautifulSoup
 import sys
+from operator import itemgetter
 
 username_=sys.argv[1]
 password_=sys.argv[2]
@@ -18,11 +19,13 @@ def get_router_data(param):
 
 
     with requests.Session() as s:
-        url="http://192.168.1.1/login.cgi"
-        r=s.post(url,data=login_data)
-        wifi_client=s.get("http://192.168.1.1/wlstatbl.htm")
-        dhcp_table=s.get("http://192.168.1.1/dhcptbl.htm")
-
+        try:
+            url="http://192.168.1.1/login.cgi"
+            r=s.post(url,data=login_data)
+            wifi_client=s.get("http://192.168.1.1/wlstatbl.htm")
+            dhcp_table=s.get("http://192.168.1.1/dhcptbl.htm")
+        except requests.exceptions.RequestException as e:  # This is the correct syntax
+            print(e)
     if param == 1:
         f = open("wifi_tab.html","w+")
         f.write(wifi_client.text)
@@ -111,7 +114,7 @@ if timetorun<0:
                     processed_list[i][0]=dhcp_list[j][0]
                     break
 
-
+        processed_list = sorted(processed_list, key = itemgetter(1),reverse=True)            
         for each in processed_list:
             print(str(each[0])+"---Sending---"+ str(each[1])+"---Receiving---" + str(each[2]))
         print("\n\n")
@@ -131,7 +134,7 @@ else:
                     processed_list[i][0]=dhcp_list[j][0]
                     break
 
-
+        processed_list = sorted(processed_list, key = itemgetter(1),reverse=True)                  
         for each in processed_list:
             print(str(each[0])+"\nSending---"+ str(each[1])+"\nReceiving---" + str(each[2]))
             print("\n\n")
