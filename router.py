@@ -24,6 +24,7 @@ def get_router_data(param):
             r=s.post(url,data=login_data)
             wifi_client=s.get("http://192.168.1.1/wlstatbl.htm")
             dhcp_table=s.get("http://192.168.1.1/dhcptbl.htm")
+            stats_table= s.get("http://192.168.1.1/stats.htm")
         except requests.exceptions.RequestException as e:  # This is the correct syntax
             print(e)
     if param == 1:
@@ -36,6 +37,9 @@ def get_router_data(param):
         f.close()
     f = open("dhcp_tab.html","w+")
     f.write(dhcp_table.text)
+    f.close()
+    f = open("stats_table.html","w+")
+    f.write(stats_table.text)
     f.close()
 
     
@@ -83,7 +87,11 @@ def read_dhcp():
             tmp.append(list_of_things[i])
     return fin_list
 
-
+def router_speed():
+    f = open("stats_table.html")
+    text_inside = f.read()
+    ls = re.findall("[<][t][d][>].*[\s](.*)",text_inside)
+    return ls
 
 def processlist(prev_lst,current_lst):
     i=0
@@ -114,9 +122,11 @@ if timetorun<0:
                     processed_list[i][0]=dhcp_list[j][0]
                     break
 
-        processed_list = sorted(processed_list, key = itemgetter(1),reverse=True)            
+        speeds = router_speed()
+        processed_list = sorted(processed_list, key = itemgetter(1),reverse=True)
+        print("Upstream   "+speeds[0]+"   Downstream   "+speeds[1])            
         for each in processed_list:
-            print(str(each[0])+"---Sending---"+ str(each[1])+"---Receiving---" + str(each[2]))
+            print(str(each[0])+"   Sending   "+ str(each[1])+"   Receiving   " + str(each[2]))
         print("\n\n")
 else:
     for i in range(0,timetorun):
@@ -133,9 +143,10 @@ else:
                 if dhcp_list[j][2]==mac_key and len(dhcp_list[j][0])>2 :
                     processed_list[i][0]=dhcp_list[j][0]
                     break
-
-        processed_list = sorted(processed_list, key = itemgetter(1),reverse=True)                  
+        speeds = router_speed()
+        processed_list = sorted(processed_list, key = itemgetter(1),reverse=True)
+        print("Upstream   "+speeds[0]+"   Downstream   "+speeds[1])                  
         for each in processed_list:
-            print(str(each[0])+"\nSending---"+ str(each[1])+"\nReceiving---" + str(each[2]))
+            print(str(each[0])+"   Sending   "+ str(each[1])+"   Receiving   " + str(each[2]))
             print("\n\n")
         print("\n\n")
